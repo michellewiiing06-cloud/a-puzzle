@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A Little Something For You ❤️</title>
+<style>
+:root{--pink:#c85a82;--ink:#4b2938;--paper:#fffaf3}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:Georgia,serif;color:var(--ink);background:linear-gradient(135deg,#fff4f7,#f7efff);overflow-x:hidden}
+.screen{display:none;min-height:100vh;align-items:center;justify-content:center;padding:24px}
+.screen.active{display:flex}
+.card{width:min(760px,95vw);background:#ffffffdf;border:1px solid #efc9d8;border-radius:28px;padding:34px 28px;box-shadow:0 18px 55px #6e38531c;text-align:center}
+h1{font-size:clamp(30px,6vw,52px);margin:8px 0 14px}
+h2{font-size:clamp(25px,5vw,39px);margin:8px 0 14px}
+p{font-size:18px;line-height:1.65}
+button{border:0;border-radius:999px;background:var(--pink);color:white;padding:13px 25px;font-size:16px;cursor:pointer;box-shadow:0 7px 18px #c85a8233}
+button:hover{transform:translateY(-1px)}
+.continue{margin-top:18px}
+.heartBig{font-size:88px;animation:pulse 1.6s infinite}
+@keyframes pulse{50%{transform:scale(1.08)}}
+
+/* Level 1 */
+.jigsaw{width:min(390px,90vw);aspect-ratio:4/3;margin:24px auto;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,1fr);gap:3px}
+.slot{position:relative;border:1px dashed #dcb7c5;border-radius:7px;background:#fff5f8;overflow:hidden}
+.slot span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#d8bdc7;font-size:12px}
+.pieces1{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;max-width:620px;margin:auto}
+.p1{width:82px;height:67px;background:#f4bfd0;display:flex;align-items:center;justify-content:center;cursor:grab;border-radius:14px;box-shadow:0 5px 12px #63334820;font-size:12px;touch-action:none}
+.p1.placed{opacity:.18;pointer-events:none}
+#heartCanvas{position:absolute;inset:0;width:100%;height:100%;display:none;object-fit:cover}
+.heartPreview{font-size:75px;display:none}
+
+/* Level 2 */
+input{width:min(430px,90%);padding:15px 18px;border-radius:15px;border:1px solid #d9b7c4;font-size:19px;text-align:center;outline:none}
+input:focus{border-color:var(--pink);box-shadow:0 0 0 3px #c85a8218}
+.error{height:28px;margin-top:12px;font-weight:bold;color:#a13e62}
+
+/* Level 3 */
+.options{display:grid;gap:12px;max-width:520px;margin:25px auto}
+.option{width:100%;background:#fff;color:var(--ink);border:1px solid #ebc9d6;box-shadow:none;text-align:left}
+.option.correct{background:#e7f5ea}
+.option.wrong{background:#f7e0e6}
+
+/* Level 4 */
+.tornArea{position:relative;width:min(650px,92vw);height:420px;margin:20px auto;background:#e9dfe0;border:2px dashed #c9adb7;border-radius:22px;overflow:hidden}
+.tornPiece{position:absolute;width:175px;height:125px;background:var(--paper);box-shadow:0 8px 18px #54352a22;display:flex;align-items:center;justify-content:center;text-align:center;padding:18px;line-height:1.45;font-size:14px;cursor:grab;touch-action:none;user-select:none}
+.tornPiece.done{cursor:default;box-shadow:none;transform:none!important}
+.shapeDiamond{clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+.shapeOval{border-radius:50%}
+.shapeTriangle{clip-path:polygon(50% 0,100% 100%,0 100%);padding:30px 20px 10px}
+.shapeCurve{border-radius:48% 18% 52% 25%/35% 55% 30% 65%}
+.shapeHeart{clip-path:path("M88 120 C20 75 0 45 15 20 C30 -5 62 4 88 32 C114 4 146 -5 161 20 C176 45 156 75 88 120 Z")}
+.shapePoly{clip-path:polygon(8% 20%,72% 0,100% 38%,84% 100%,20% 88%,0 55%)}
+.letter{display:none;text-align:left;background:var(--paper);padding:30px;max-width:650px;margin:24px auto;border:1px solid #ddcbbb;box-shadow:0 12px 35px #51382b20;line-height:1.8}
+.letter.show{display:block;animation:rise .7s ease}
+@keyframes rise{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:none}}
+.finalTitle{font-size:clamp(36px,8vw,72px);color:#b8426e;margin:18px 0}
+.float{position:fixed;bottom:-30px;pointer-events:none;animation:up 5s linear forwards}
+@keyframes up{to{transform:translateY(-110vh) rotate(25deg);opacity:0}}
+.small{font-size:14px;color:#876875}
+</style>
+</head>
+<body>
+
+<!-- LEVEL 1 -->
+<section class="screen active" id="level1">
+<div class="card">
+  <div class="heartBig">❤️</div>
+  <h1>Make a Heart</h1>
+  <p>Put the 12 pieces together. 🧩</p>
+  <div class="jigsaw" id="board1"></div>
+  <div class="pieces1" id="pieces1"></div>
+  <div id="jigsawMsg" class="small"></div>
+  <button id="to2" class="continue" style="display:none" onclick="go('level2')">Continue →</button>
+</div>
+</section>
+
+<!-- LEVEL 2 -->
+<section class="screen" id="level2">
+<div class="card">
+  <h2>🔐 Crack the Code to My Heart</h2>
+  <p><b>You must crack the code… even your password. 🔐</b></p>
+  <p><b>Hint:</b> Our special day. ❤️</p>
+  <input id="codeInput" placeholder="Enter the code" autocomplete="off">
+  <br><button class="continue" onclick="checkCode()">Unlock ❤️</button>
+  <div id="codeMsg" class="error"></div>
+</div>
+</section>
+
+<!-- LEVEL 3 -->
+<section class="screen" id="level3">
+<div class="card">
+  <h2>❤️ What does this code represent?</h2>
+  <div class="options">
+    <button class="option" onclick="answer(this,false)">A. My lucky numbers</button>
+    <button class="option" onclick="answer(this,false)">B. A random code</button>
+    <button class="option" onclick="answer(this,true)">C. Our anniversary</button>
+    <button class="option" onclick="answer(this,false)">D. My secret password</button>
+  </div>
+  <div id="mcqMsg" class="small"></div>
+</div>
+</section>
+
+<!-- LEVEL 4 -->
+<section class="screen" id="level4">
+<div class="card">
+  <h2>🧩 One Last Little Puzzle</h2>
+  <p>Put the torn pieces back together. ❤️</p>
+  <p class="small">Easy one — no rotation needed. Just match the pieces.</p>
+  <div class="tornArea" id="tornArea"></div>
+  <div id="tornMsg" class="small">6 pieces left.</div>
+  <div class="letter" id="letter">
+    <h2 style="text-align:center">You made it to the end. ❤️</h2>
+    <p>A little puzzle, a little chaos… and somehow you made it all the way here. 😭</p>
+    <p>I made this little thing just for you, my Alu, because I wanted to give you something more than just a message on a screen.</p>
+    <p>Every puzzle had a little piece of us hidden inside it, and you put every single piece together. 🥹❤️</p>
+    <p>So here's the actual message I wanted you to find:</p>
+    <p><b>Happy Boyfriend Day, Alu. ❤️</b></p>
+    <p>I hope you know how much you mean to me and how special you are to me.</p>
+    <p>Thank you for being you.<br>And thank you for making my days a little happier just by being in them. 🫶</p>
+    <p style="text-align:center"><b>Happy Boyfriend Day, my Alu. ❤️</b></p>
+    <p style="text-align:center">— made with lots and lots of love 💗</p>
+    <button style="display:block;margin:22px auto 0" onclick="go('level5');hearts()">Finish ♡</button>
+  </div>
+</div>
+</section>
+
+<!-- LEVEL 5 -->
+<section class="screen" id="level5">
+<div class="card">
+  <div class="heartBig">💗</div>
+  <div class="finalTitle">HAPPY BOYFRIEND DAY</div>
+  <p>❤️ To my Alu ❤️</p>
+  <p>Made just for you.</p>
+</div>
+</section>
+
+<script>
+function go(id){
+ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ window.scrollTo(0,0);
+}
+
+/* Level 1: 12-piece draggable 4x3 heart */
+const board=document.getElementById('board1'), tray=document.getElementById('pieces1');
+let done1=0;
+for(let i=0;i<12;i++){
+ const slot=document.createElement('div'); slot.className='slot'; slot.dataset.i=i;
+ const n=document.createElement('span'); n.textContent='piece '+(i+1); slot.appendChild(n); board.appendChild(slot);
+}
+const order=[...Array(12).keys()].sort(()=>Math.random()-.5);
+order.forEach(i=>{
+ const p=document.createElement('div'); p.className='p1'; p.textContent='🧩'; p.dataset.i=i;
+ p.addEventListener('pointerdown',dragJigsaw); tray.appendChild(p);
+});
+let activeP=null, dx=0,dy=0;
+function dragJigsaw(e){
+ activeP=this; activeP.setPointerCapture(e.pointerId);
+ const r=activeP.getBoundingClientRect(); dx=e.clientX-r.left; dy=e.clientY-r.top;
+ activeP.style.position='fixed'; activeP.style.zIndex=50;
+ activeP.onpointermove=moveJ; activeP.onpointerup=dropJ;
+}
+function moveJ(e){
+ activeP.style.left=(e.clientX-dx)+'px'; activeP.style.top=(e.clientY-dy)+'px';
+}
+function dropJ(){
+ const i=+activeP.dataset.i, r=board.children[i].getBoundingClientRect(), p=activeP.getBoundingClientRect();
+ const pcx=p.left+p.width/2,pcy=p.top+p.height/2, rcx=r.left+r.width/2,rcy=r.top+r.height/2;
+ if(Math.hypot(pcx-rcx,pcy-rcy)<65){
+   activeP.classList.add('placed'); activeP.style.position='absolute';
+   activeP.style.left=(r.left-board.getBoundingClientRect().left)+'px';
+   activeP.style.top=(r.top-board.getBoundingClientRect().top)+'px';
+   activeP.style.width=r.width+'px'; activeP.style.height=r.height+'px';
+   board.appendChild(activeP); done1++;
+   if(done1===12){
+     board.innerHTML='';
+     board.style.display='block';
+     board.style.background='radial-gradient(circle at 50% 35%,#ffb4cf 0 12%,transparent 13%),radial-gradient(circle at 35% 30%,#ffb4cf 0 13%,transparent 14%),radial-gradient(circle at 65% 30%,#ffb4cf 0 13%,transparent 14%),linear-gradient(135deg,#ffabc8,#e66f9a)';
+     board.style.clipPath='path("M 195 355 C 35 255 5 155 55 80 C 100 15 165 45 195 105 C 225 45 290 15 335 80 C 385 155 355 255 195 355 Z")';
+     board.style.margin='25px auto';
+     document.getElementById('jigsawMsg').innerHTML='<b>Awww, you made a heart for me, babyyy! ❤️</b><br>I love ya blah blah 😭💗';
+     document.getElementById('to2').style.display='inline-block';
+   }
+ }
+ activeP.onpointermove=null;activeP.onpointerup=null;activeP=null;
+}
+
+/* Level 2: typed code. The answer is intentionally not displayed anywhere. */
+function checkCode(){
+ const v=document.getElementById('codeInput').value.trim().replace(/\s+/g,'');
+ const msg=document.getElementById('codeMsg');
+ if(v==='18092026'){
+   msg.style.color='#398254'; msg.textContent='ACCESS GRANTED ❤️🔓';
+   setTimeout(()=>go('level3'),700);
+ }else{
+   msg.style.color='#a13e62'; msg.textContent='Nope 😭 Think about our special day.';
+ }
+}
+document.getElementById('codeInput').addEventListener('keydown',e=>{if(e.key==='Enter')checkCode()});
+
+/* Level 3 */
+function answer(btn,ok){
+ const msg=document.getElementById('mcqMsg');
+ if(ok){
+   btn.classList.add('correct'); msg.textContent='CORRECTTT 😭❤️ You remembered. 🥹🫶';
+   setTimeout(()=>go('level4'),850);
+ }else{
+   btn.classList.add('wrong'); msg.textContent='Nopeee 😭 Try again.';
+ }
+}
+
+/* Level 4: six easy, non-rectangular pieces */
+const pieces=[
+ {shape:'shapeDiamond',text:'You made it to the end. ❤️',x:230,y:25},
+ {shape:'shapeOval',text:'A little puzzle, a little chaos…',x:25,y:30},
+ {shape:'shapeTriangle',text:'and somehow you made it all the way here. 😭',x:425,y:35},
+ {shape:'shapeCurve',text:'I made this little thing just for you, my Alu.',x:35,y:220},
+ {shape:'shapeHeart',text:'Every puzzle had a little piece of us hidden inside it. 🥹❤️',x:230,y:220},
+ {shape:'shapePoly',text:'Happy Boyfriend Day, Alu. ❤️',x:425,y:220}
+];
+const area=document.getElementById('tornArea'); let left=6;
+pieces.forEach((d,i)=>{
+ const p=document.createElement('div');p.className='tornPiece '+d.shape;p.textContent=d.text;p.dataset.i=i;
+ p.style.left=(10+Math.random()*430)+'px';p.style.top=(10+Math.random()*280)+'px';
+ p.addEventListener('pointerdown',startTorn);area.appendChild(p);
+});
+let tp=null,tx=0,ty=0;
+function startTorn(e){
+ if(this.classList.contains('done'))return;
+ tp=this;tp.setPointerCapture(e.pointerId);const r=tp.getBoundingClientRect();tx=e.clientX-r.left;ty=e.clientY-r.top;
+ tp.style.zIndex=100;tp.onpointermove=moveTorn;tp.onpointerup=dropTorn;
+}
+function moveTorn(e){
+ const r=area.getBoundingClientRect();tp.style.left=(e.clientX-r.left-tx)+'px';tp.style.top=(e.clientY-r.top-ty)+'px';
+}
+function dropTorn(){
+ const d=pieces[+tp.dataset.i],x=parseFloat(tp.style.left),y=parseFloat(tp.style.top);
+ if(Math.abs(x-d.x)<70 && Math.abs(y-d.y)<70){
+   tp.style.left=d.x+'px';tp.style.top=d.y+'px';tp.classList.add('done');left--;
+   document.getElementById('tornMsg').textContent=left+' pieces left.';
+   if(left===0){
+     document.getElementById('tornMsg').textContent='You put it all back together. ❤️';
+     setTimeout(()=>document.getElementById('letter').classList.add('show'),450);
+   }
+ }
+ tp.onpointermove=null;tp.onpointerup=null;tp=null;
+}
+function hearts(){
+ for(let i=0;i<20;i++){
+  const h=document.createElement('div');h.className='float';h.textContent=['❤️','💗','💕','💖'][i%4];
+  h.style.left=Math.random()*100+'vw';h.style.fontSize=(15+Math.random()*25)+'px';h.style.animationDelay=Math.random()*1.5+'s';
+  document.body.appendChild(h);setTimeout(()=>h.remove(),6000);
+ }
+}
+</script>
+</body>
+</html>
