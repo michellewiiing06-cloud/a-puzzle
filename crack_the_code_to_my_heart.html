@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crack the Code to My Heart ❤️</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; overflow-x:hidden;
+  font-family:Georgia, "Times New Roman", serif;
+  background:linear-gradient(135deg,#fff5f8,#f8f0ff,#fff);
+  color:#4b2638;
+}
+.screen{
+  min-height:100vh; display:none; align-items:center; justify-content:center;
+  padding:28px 18px; position:relative;
+}
+.screen.active{display:flex}
+.card{
+  width:min(720px,94vw); background:rgba(255,255,255,.88);
+  border:1px solid #f2cbd9; border-radius:28px; padding:34px;
+  box-shadow:0 18px 60px rgba(126,54,83,.13); text-align:center;
+}
+h1{font-size:clamp(28px,6vw,48px); margin:0 0 12px}
+h2{font-size:clamp(24px,5vw,38px); margin:0 0 15px}
+p{font-size:18px; line-height:1.65}
+button{
+  border:0; border-radius:999px; padding:13px 24px; font-size:16px;
+  cursor:pointer; background:#b84d78; color:white; box-shadow:0 7px 18px rgba(184,77,120,.22);
+}
+button:hover{transform:translateY(-1px)}
+.continue{margin-top:22px}
+.heart{font-size:85px; animation:pulse 1.6s infinite}
+@keyframes pulse{50%{transform:scale(1.09)}}
+.code-list{display:grid; gap:12px; margin:25px auto; max-width:520px; text-align:left}
+.clue{
+  padding:15px 18px; border-radius:17px; background:#fff7fa; border:1px solid #f1d0dc;
+}
+.clue b{color:#b13f6c}
+.code{font-size:30px; letter-spacing:7px; margin:22px 0}
+.options{display:grid; gap:12px; margin:25px auto; max-width:520px}
+.option{
+  background:white; color:#5b3143; border:1px solid #edc9d7; box-shadow:none;
+  text-align:left;
+}
+.option.correct{background:#f4d8e4}
+.option.wrong{background:#eee0e5}
+.feedback{min-height:28px;font-weight:bold}
+.pieces{
+  width:min(650px,90vw); min-height:300px; position:relative; margin:25px auto;
+  background:#eadfe1; border-radius:18px; overflow:hidden;
+  border:2px dashed #caa7b2;
+}
+.piece{
+  position:absolute; width:145px; min-height:75px; padding:12px;
+  background:#fffaf4; color:#513744; border:1px solid #d7c4b9;
+  box-shadow:0 7px 15px rgba(0,0,0,.12); cursor:grab;
+  display:flex; align-items:center; justify-content:center; text-align:center;
+  user-select:none; transform:rotate(var(--r));
+  font-size:14px; line-height:1.35;
+}
+.piece.placed{cursor:default; box-shadow:none; transform:none!important}
+.letter{
+  display:none; max-width:650px; margin:25px auto 0; padding:35px 30px;
+  background:#fffdf8; border:1px solid #dfcdbd;
+  box-shadow:0 12px 35px rgba(83,50,41,.14); text-align:left;
+  line-height:1.8; font-size:17px;
+}
+.letter.show{display:block; animation:reveal .7s ease}
+@keyframes reveal{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:none}}
+.final-title{font-size:clamp(34px,8vw,70px); color:#b33f6b; margin:20px 0}
+.float-heart{position:fixed; bottom:-30px; animation:float 5s linear forwards; pointer-events:none}
+@keyframes float{to{transform:translateY(-110vh) rotate(20deg);opacity:0}}
+.small{font-size:14px;color:#8b6473}
+</style>
+</head>
+<body>
+
+<section class="screen active" id="s1">
+  <div class="card">
+    <div class="heart">❤️</div>
+    <h1>Awww, you made a heart for me, babyyy!</h1>
+    <p>You actually put every little piece together just for me??? 😭💕</p>
+    <p><b>I LOVE YA BLAAAAH 😭❤️</b></p>
+    <p>You completed my heart. 🫶</p>
+    <button class="continue" onclick="show('s2')">Continue →</button>
+  </div>
+</section>
+
+<section class="screen" id="s2">
+  <div class="card">
+    <h2>🔐 Crack the Code to My Heart</h2>
+    <p>Each clue gives you one part of the code.</p>
+    <div class="code-list">
+      <div class="clue"><b>① 1</b> — The unique digit.</div>
+      <div class="clue"><b>② 8</b> — The number of letters in my name.</div>
+      <div class="clue"><b>③ 0</b> — The value of other boys to you.</div>
+      <div class="clue"><b>④ 9</b> — What my birthday adds up to.</div>
+      <div class="clue"><b>⑤ 2026</b> — The current year.</div>
+    </div>
+    <div class="code">1 8 0 9 2026</div>
+    <p><b>Now… what is this? 👀❤️</b></p>
+    <button class="continue" onclick="show('s3')">Continue →</button>
+  </div>
+</section>
+
+<section class="screen" id="s3">
+  <div class="card">
+    <h2>❤️ What does 1 8 0 9 2026 represent?</h2>
+    <div class="options">
+      <button class="option" onclick="wrong(this)">A. My lucky numbers</button>
+      <button class="option" onclick="wrong(this)">B. A random code</button>
+      <button class="option" onclick="correct(this)">C. Our anniversary</button>
+      <button class="option" onclick="wrong(this)">D. My secret password</button>
+    </div>
+    <div class="feedback" id="feedback"></div>
+  </div>
+</section>
+
+<section class="screen" id="s4">
+  <div class="card">
+    <h2>🧩 One Last Thing…</h2>
+    <p>Something's been waiting for you at the end.</p>
+    <p><b>Put the torn pieces back together. ❤️</b></p>
+    <div class="pieces" id="pieces"></div>
+    <p class="small" id="pieceHint">Drag the pieces into their matching places.</p>
+    <div class="letter" id="letter">
+      <h2 style="text-align:center">You made it to the end. ❤️</h2>
+      <p>A little puzzle, a little chaos, a few clues… and somehow you made it all the way here. 😭</p>
+      <p>I made this little thing just for you, my Alu, because I wanted to give you something that's more than just a message on a screen.</p>
+      <p>Every puzzle had a little piece of us hidden inside it, and you put every single piece together. 🥹❤️</p>
+      <p>So here's the actual message I wanted you to find:</p>
+      <p><b>Happy Boyfriend Day, Alu. ❤️</b></p>
+      <p>I hope you know how much you mean to me and how special you are to me.</p>
+      <p>Thank you for being you.<br>And thank you for making my days a little happier just by being in them. 🫶</p>
+      <p style="text-align:center"><b>Happy Boyfriend Day, my Alu. ❤️</b></p>
+      <p style="text-align:center">— made with lots and lots of love 💗</p>
+      <button style="display:block;margin:25px auto 0" onclick="show('s5'); hearts()">♡ Finish ♡</button>
+    </div>
+  </div>
+</section>
+
+<section class="screen" id="s5">
+  <div class="card">
+    <div class="heart">💗</div>
+    <div class="final-title">HAPPY BOYFRIEND DAY</div>
+    <p>❤️ To my Alu ❤️</p>
+    <p>Made just for you.</p>
+  </div>
+</section>
+
+<script>
+function show(id){
+  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function wrong(btn){
+  btn.classList.add('wrong');
+  document.getElementById('feedback').textContent="Nopeee 😭 My heart isn't opening that easily. Try again. ❤️";
+}
+function correct(btn){
+  btn.classList.add('correct');
+  document.getElementById('feedback').textContent="CORRECTTT 😭❤️ You remembered. 🥹🫶";
+  setTimeout(()=>show('s4'),900);
+}
+
+/* Final torn-paper puzzle: 12 draggable pieces */
+const texts=[
+  "You made it to the end. ❤️",
+  "A little puzzle, a little chaos…",
+  "and somehow you made it all the way here. 😭",
+  "I made this little thing just for you, my Alu,",
+  "because I wanted to give you something special.",
+  "Every puzzle had a little piece of us hidden inside it,",
+  "and you put every single piece together. 🥹❤️",
+  "So here's the actual message I wanted you to find:",
+  "Happy Boyfriend Day, Alu. ❤️",
+  "Thank you for being you.",
+  "You make my days a little happier. 🫶",
+  "Made with lots and lots of love 💗"
+];
+
+const container=document.getElementById('pieces');
+const pieces=[];
+let placed=0, drag=null, ox=0, oy=0;
+
+function setupPieces(){
+  texts.forEach((text,i)=>{
+    const p=document.createElement('div');
+    p.className='piece';
+    p.textContent=text;
+    p.dataset.i=i;
+    p.style.setProperty('--r',(Math.random()*12-6)+'deg');
+    p.style.left=(10+Math.random()*70)+'%';
+    p.style.top=(8+Math.random()*78)+'%';
+    p.addEventListener('pointerdown',startDrag);
+    container.appendChild(p);
+    pieces.push(p);
+  });
+}
+function target(i){
+  const cols=3, rows=4;
+  const w=container.clientWidth/cols, h=container.clientHeight/rows;
+  return {x:i%cols*w+4,y:Math.floor(i/cols)*h+4,w:w-8,h:h-8};
+}
+function startDrag(e){
+  if(this.classList.contains('placed')) return;
+  drag=this; drag.setPointerCapture(e.pointerId);
+  const r=drag.getBoundingClientRect();
+  ox=e.clientX-r.left; oy=e.clientY-r.top;
+  drag.style.zIndex=100;
+  drag.onpointermove=moveDrag;
+  drag.onpointerup=endDrag;
+}
+function moveDrag(e){
+  const r=container.getBoundingClientRect();
+  drag.style.left=(e.clientX-r.left-ox)+'px';
+  drag.style.top=(e.clientY-r.top-oy)+'px';
+}
+function endDrag(){
+  const i=+drag.dataset.i, t=target(i);
+  const left=parseFloat(drag.style.left), top=parseFloat(drag.style.top);
+  if(Math.abs(left-t.x)<55 && Math.abs(top-t.y)<55){
+    drag.style.left=t.x+'px'; drag.style.top=t.y+'px';
+    drag.style.width=t.w+'px'; drag.style.height=t.h+'px';
+    drag.classList.add('placed'); placed++;
+    if(placed===texts.length){
+      document.getElementById('pieceHint').textContent="You put every piece back together. ❤️";
+      setTimeout(()=>document.getElementById('letter').classList.add('show'),500);
+    }
+  }
+  drag.style.zIndex='';
+  drag.onpointermove=null; drag.onpointerup=null; drag=null;
+}
+setupPieces();
+
+function hearts(){
+  for(let i=0;i<18;i++){
+    const h=document.createElement('div');
+    h.className='float-heart'; h.textContent=['❤️','💗','💕','💖'][i%4];
+    h.style.left=Math.random()*100+'vw';
+    h.style.animationDelay=Math.random()*1.5+'s';
+    h.style.fontSize=(16+Math.random()*22)+'px';
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),6000);
+  }
+}
+</script>
+</body>
+</html>
