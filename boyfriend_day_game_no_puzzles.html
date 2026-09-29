@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A Little Something For You ❤️</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:#4b2938;font-family:Georgia,"Times New Roman",serif;background:linear-gradient(135deg,#fff3f7,#f5efff,#fff);overflow-x:hidden}
+.screen{display:none;min-height:100vh;align-items:center;justify-content:center;padding:22px}
+.screen.active{display:flex}
+.card{width:min(720px,94vw);padding:38px 28px;text-align:center;background:#ffffffea;border:1px solid #efcbd9;border-radius:30px;box-shadow:0 20px 65px rgba(93,45,67,.14)}
+h1{font-size:clamp(32px,7vw,54px);margin:5px 0 16px}
+h2{font-size:clamp(26px,6vw,40px);margin:5px 0 18px}
+p{font-size:18px;line-height:1.7}
+button{border:0;border-radius:999px;padding:14px 25px;font-size:16px;background:#c6537d;color:#fff;cursor:pointer;box-shadow:0 8px 20px rgba(198,83,125,.23)}
+button:hover{transform:translateY(-1px)}
+.continue{margin-top:20px}
+.heart{font-size:82px;animation:pulse 1.7s infinite}
+@keyframes pulse{50%{transform:scale(1.08)}}
+.options{display:grid;gap:13px;max-width:540px;margin:25px auto 0}
+.option{width:100%;text-align:left;color:#4b2938;background:#fff;border:1px solid #eccbd7;box-shadow:none}
+.option.correct{background:#e8f6eb;border-color:#b7ddbf}
+.option.wrong{background:#f8e2e9;border-color:#edbaca}
+.option:disabled{cursor:default}
+.feedback{min-height:28px;margin-top:15px;font-weight:bold}
+#progress{font-size:14px;color:#896875;margin-top:15px}
+.codeBox{margin:22px auto;max-width:520px;padding:20px;border-radius:18px;background:#fff7fa;border:1px solid #efd0dc}
+input{width:min(430px,90%);padding:15px 18px;border:1px solid #d9b8c5;border-radius:15px;font-size:19px;text-align:center;outline:none}
+input:focus{border-color:#c6537d;box-shadow:0 0 0 4px rgba(198,83,125,.1)}
+.error{min-height:28px;margin-top:12px}
+.letter{max-width:650px;margin:10px auto 0;padding:36px 30px;text-align:left;background:#fffdf7;border:1px solid #dfcdbd;box-shadow:0 14px 40px rgba(74,52,40,.13);line-height:1.85}
+.finalTitle{font-size:clamp(38px,9vw,74px);color:#b83e6c;line-height:1.05}
+.float-heart{position:fixed;bottom:-30px;pointer-events:none;animation:floatUp 5s linear forwards}
+@keyframes floatUp{to{transform:translateY(-110vh) rotate(25deg);opacity:0}}
+</style>
+</head>
+<body>
+
+<section class="screen active" id="level1">
+<div class="card">
+  <div class="heart">❤️</div>
+  <h1>How Well Do You Know Me?</h1>
+  <p>Five questions. No cheating. 👀</p>
+  <div id="questionArea"></div>
+  <div id="progress">Question 1 of 5</div>
+</div>
+</section>
+
+<section class="screen" id="level2">
+<div class="card">
+  <div class="heart">🔐</div>
+  <h2>Crack the Code to My Heart</h2>
+  <div class="codeBox">
+    <p><b>You must crack the code… even your password. 🔐</b></p>
+    <p><b>Hint:</b> Our special day. ❤️</p>
+  </div>
+  <p>Enter the code you figured out:</p>
+  <input id="codeInput" type="text" inputmode="numeric" autocomplete="off" placeholder="Enter code">
+  <br>
+  <button class="continue" onclick="checkCode()">Unlock ❤️</button>
+  <div class="error" id="codeMsg"></div>
+</div>
+</section>
+
+<section class="screen" id="level3">
+<div class="card">
+  <h2>❓ What Is This?</h2>
+  <p>So… what does the code represent? 👀</p>
+  <div class="options">
+    <button class="option" onclick="level3Answer(this,false)">A. My lucky numbers</button>
+    <button class="option" onclick="level3Answer(this,false)">B. A random code</button>
+    <button class="option" onclick="level3Answer(this,true)">C. Our anniversary ❤️</button>
+    <button class="option" onclick="level3Answer(this,false)">D. My secret password</button>
+  </div>
+  <div class="feedback" id="feedback3"></div>
+</div>
+</section>
+
+<section class="screen" id="final">
+<div class="card">
+  <div class="letter">
+    <h2 style="text-align:center">You made it to the end. ❤️</h2>
+    <p>A little quiz, a little chaos… and somehow you made it all the way here. 😭</p>
+    <p>I made this little thing just for you, my Alu, because I wanted to give you something more than just a message on a screen.</p>
+    <p>Every question, every clue, and every little detail was made just for you. 🥹❤️</p>
+    <p>And if you made it this far, then you officially cracked your way through my little heart. 🫶</p>
+    <p>So here's the actual message I wanted you to find:</p>
+    <p><b>Happy Boyfriend Day, Alu. ❤️</b></p>
+    <p>I hope you know how much you mean to me and how special you are to me.</p>
+    <p>Thank you for being you.<br>And thank you for making my days a little happier just by being in them. 🫶</p>
+    <p style="text-align:center"><b>Happy Boyfriend Day, my Alu. ❤️</b></p>
+    <p style="text-align:center">— made with lots and lots of love 💗</p>
+  </div>
+  <button class="continue" onclick="finish()">♡ Finish ♡</button>
+</div>
+</section>
+
+<section class="screen" id="end">
+<div class="card">
+  <div class="heart">💗</div>
+  <div class="finalTitle">HAPPY<br>BOYFRIEND DAY</div>
+  <p>❤️ To my Alu ❤️</p>
+  <p>Made just for you.</p>
+</div>
+</section>
+
+<script>
+const questions=[
+ {q:"What's my favorite color?",a:["Pink","Blue","Grey 🩶","Green"],correct:2},
+ {q:"What kind of music am I really into?",a:["Jazz","K-pop 🎶","Country","Classical"],correct:1},
+ {q:"Which hobby is especially me?",a:["Cooking","Gaming","Gardening","Photography 📸"],correct:3},
+ {q:"Which aesthetic would I pick?",a:["Cottagecore","Y2K ✨","Old money","Minimalist"],correct:1},
+ {q:"What do I call you?",a:["Dude","Bestie","Alu","Bro 😭"],correct:3}
+];
+
+let qIndex=0;
+
+function renderQuestion(){
+ const q=questions[qIndex];
+ document.getElementById('questionArea').innerHTML=
+ `<h2>${q.q}</h2><div class="options">`+
+ q.a.map((x,i)=>`<button class="option" onclick="answerQ(this,${i})">${String.fromCharCode(65+i)}. ${x}</button>`).join('')+
+ `</div><div class="feedback" id="qFeedback"></div>`;
+ document.getElementById('progress').textContent=`Question ${qIndex+1} of 5`;
+}
+renderQuestion();
+
+function answerQ(btn,index){
+ const q=questions[qIndex],feedback=document.getElementById('qFeedback');
+ if(index!==q.correct){
+   btn.classList.add('wrong');
+   feedback.textContent="Nope 😭 Try again.";
+   setTimeout(()=>btn.classList.remove('wrong'),450);
+   return;
+ }
+ btn.classList.add('correct');
+ document.querySelectorAll('#questionArea .option').forEach(b=>b.disabled=true);
+ if(qIndex<4){
+   feedback.textContent=["Yep 😭❤️","You know meee.","Correcttt 📸❤️","Okayyy, you get me."][qIndex];
+   setTimeout(()=>{qIndex++;renderQuestion()},650);
+ }else{
+   feedback.textContent="5/5?! 😭❤️ Okay, you actually know me.";
+   setTimeout(()=>go('level2'),900);
+ }
+}
+
+function go(id){
+ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ window.scrollTo(0,0);
+}
+
+/* The actual answer is deliberately not displayed anywhere in the UI. */
+function checkCode(){
+ const value=document.getElementById('codeInput').value.trim().replace(/\s+/g,'');
+ const msg=document.getElementById('codeMsg');
+ if(value==='18092026'){
+   msg.style.color='#398254';
+   msg.textContent='ACCESS GRANTED ❤️🔓';
+   setTimeout(()=>go('level3'),700);
+ }else{
+   msg.style.color='#a13e62';
+   msg.textContent='Nope 😭 Think about our special day.';
+ }
+}
+document.getElementById('codeInput').addEventListener('keydown',e=>{if(e.key==='Enter')checkCode()});
+
+function level3Answer(btn,correct){
+ const msg=document.getElementById('feedback3');
+ if(correct){
+   btn.classList.add('correct');
+   msg.textContent='CORRECTTT 😭❤️ You remembered. 🥹🫶';
+   setTimeout(()=>go('final'),900);
+ }else{
+   btn.classList.add('wrong');
+   msg.textContent='Nopeee 😭 Try again.';
+   setTimeout(()=>btn.classList.remove('wrong'),450);
+ }
+}
+
+function finish(){
+ go('end');
+ for(let i=0;i<22;i++){
+   const h=document.createElement('div');
+   h.className='float-heart';
+   h.textContent=['❤️','💗','💕','💖'][i%4];
+   h.style.left=Math.random()*100+'vw';
+   h.style.fontSize=(15+Math.random()*25)+'px';
+   h.style.animationDelay=Math.random()*1.5+'s';
+   document.body.appendChild(h);
+   setTimeout(()=>h.remove(),6000);
+ }
+}
+</script>
+</body>
+</html>
